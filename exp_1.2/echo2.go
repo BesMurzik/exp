@@ -1,4 +1,4 @@
-//  Выводим индекс и значение каждого аргумента по одному аргументу в строке.
+// Выводим индекс и значение каждого аргумента по одному аргументу в строке.
 package main
 
 import (
@@ -7,10 +7,7 @@ import (
 )
 
 func main() {
-	s, sep := "", ""
-	for _, arg := range os.Args[1:] {
-		s += sep + arg
-		sep = "\n"
+	for i := 1; i < len(os.Args); i++ {
+		fmt.Println(i, os.Args[i])
 	}
-	fmt.Println(s)
 }
