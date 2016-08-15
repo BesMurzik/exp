@@ -53,7 +53,7 @@ func lissajous(out io.Writer) {
 			points++
 			if points%500 == 0 {
 				colorIndex++
-				if colorIndex > uint8(len(palette)) {
+				if colorIndex >= uint8(len(palette)) {
 					colorIndex = 1
 				}
 			}
