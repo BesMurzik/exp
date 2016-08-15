@@ -1,3 +1,7 @@
+// Изменяем программу lissajous так, чтобы она генерировала изображения
+// разных цветов, добавляя в палитру p a l e t t e больше значений, а затем
+// выводя их путем изменения третьего аргумента функции SetColorIndex
+// некоторым нетривиальным способом.
 package main
 
 import (
@@ -11,12 +15,14 @@ import (
 	"time"
 )
 
-var palette = []color.Color{color.Black, color.RGBA{0, 255, 0, 255}}
-
-const (
-	blackIndex = 0
-	greenIndex = 1
-)
+var palette = []color.Color{
+	color.Black,
+	color.RGBA{0, 255, 0, 255},
+	color.RGBA{0, 51, 255, 255},
+	color.RGBA{205, 0, 0, 255},
+	color.RGBA{255, 153, 0, 255},
+	color.RGBA{153, 0, 255, 255},
+}
 
 func main() {
 	lissajous(os.Stdout)
@@ -30,6 +36,10 @@ func lissajous(out io.Writer) {
 		nframes = 64
 		delay   = 8
 	)
+
+	var colorIndex uint8 = 1
+	var points int
+
 	rand.Seed(time.Now().UTC().UnixNano())
 	freq := rand.Float64() * 3.0
 	anim := gif.GIF{LoopCount: nframes}
@@ -40,7 +50,14 @@ func lissajous(out io.Writer) {
 		for t := 0.0; t < cycles*2*math.Pi; t += res {
 			x := math.Sin(t)
 			y := math.Sin(t*freq + phase)
-			img.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5), greenIndex)
+			points++
+			if points%500 == 0 {
+				colorIndex++
+				if colorIndex >= uint8(len(palette)) {
+					colorIndex = 1
+				}
+			}
+			img.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5), colorIndex)
 		}
 		phase += 0.1
 		anim.Delay = append(anim.Delay, delay)
